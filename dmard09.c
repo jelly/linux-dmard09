@@ -151,6 +151,22 @@ static int dmard09_probe(struct i2c_client *client,
 			"unable to register iio device %d\n", ret);
 	}
 
+	#define DMARD09_REG_CTRL	0x00
+	u8 buf[3] = {0};
+	ret = i2c_smbus_read_i2c_block_data(data->client, 0x18, 1, buf);
+	if (ret < 0) {
+		// Failed..
+	}
+
+	#define VALUE_INIT_READY        0x02    /*IC init ok*/
+	#define VALUE_WHO_AM_I			0x95	/* D09 WMI */
+	if (buf[0] == VALUE_WHO_AM_I) {
+		dev_info(&client->dev, "dmard09 init ready");
+	} else {
+		dev_info(&client->dev, "dmard09 init failed");
+	}
+	
+
 	return 0;
 }
 
