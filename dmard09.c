@@ -87,23 +87,17 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 	int ret;
 	unsigned int reg;
 	struct dmard09_data *data = iio_priv(indio_dev);
-	dev_info(data->dev, "dmard09_read_raw");
-
 	u8 buf[BUF_DATA_LEN] = {0};
 
 
 	switch (mask) {
 		case IIO_CHAN_INFO_RAW:
-			dev_info(data->dev, "dmard09 reading info raw");
-
-			//ret = i2c_smbus_read_byte_data(data->client, 0x0A);
 			ret = i2c_smbus_read_i2c_block_data(data->client, 0x0A, BUF_DATA_LEN, buf);
-			dev_info(data->dev, "dmard09 done reading block: %d ", ret);
+			// FIXME: fix error messages.
 			if (ret == 0) {
-				dev_info(data->dev, "ENDVAL!");
-			}
-			else if (ret < 0) {
-				dev_info(data->dev, "error reading!");
+				dev_info(data->dev, "Cannot read accelerometer data");
+			} else if (ret < 0) {
+				dev_info(data->dev, "Error reading!");
 			} else {
 				if (chan->address == DMARD09_REG_X) {
 					*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << 8) | (buf[(DMARD09_AXIS_X+1)*2] ));
@@ -131,7 +125,6 @@ static int dmard09_probe(struct i2c_client *client,
 	int ret;
 	struct iio_dev *indio_dev;
 	struct dmard09_data *data;
-	dev_info(&client->dev, "loading dmard09");
 
 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
 	if (!indio_dev) {
@@ -163,8 +156,6 @@ static int dmard09_probe(struct i2c_client *client,
 
 static int dmard09_remove(struct i2c_client *client)
 {
-	dev_info(&client->dev, "dmard09 remove()");
-
 	struct iio_dev *indio_dev = i2c_get_clientdata(client);
 	iio_device_unregister(indio_dev);
 
