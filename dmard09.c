@@ -29,6 +29,11 @@
 #define DMARD09_REG_Y		0x0E
 #define DMARD09_REG_Z		0x10
 
+#define BUF_DATA_LEN 8
+#define DMARD09_AXIS_X 0
+#define DMARD09_AXIS_Y 1
+#define DMARD09_AXIS_Z 2
+
 /* Used for dev_info() */
 struct dmard09_data {
 	struct i2c_client *client;
@@ -84,11 +89,7 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 	struct dmard09_data *data = iio_priv(indio_dev);
 	dev_info(data->dev, "dmard09_read_raw");
 
-	#define DATA_LEN 8
-	#define DMARD09_AXIS_X 0
-	#define DMARD09_AXIS_Y 1
-	#define DMARD09_AXIS_Z 2
-	u8 buf[DATA_LEN] = {0};
+	u8 buf[BUF_DATA_LEN] = {0};
 
 
 	switch (mask) {
@@ -96,7 +97,7 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 			dev_info(data->dev, "dmard09 reading info raw");
 
 			//ret = i2c_smbus_read_byte_data(data->client, 0x0A);
-			ret = i2c_smbus_read_i2c_block_data(data->client, 0x0A, DATA_LEN, buf);
+			ret = i2c_smbus_read_i2c_block_data(data->client, 0x0A, BUF_DATA_LEN, buf);
 			dev_info(data->dev, "dmard09 done reading block: %d ", ret);
 			if (ret == 0) {
 				dev_info(data->dev, "ENDVAL!");
