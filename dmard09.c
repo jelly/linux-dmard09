@@ -25,6 +25,9 @@
 #define DMARD09_REG_CHIPID      0x18
 #define DMARD09_REG_CTRL	0x00
 #define DMARD09_REG_DATA	0x01
+#define DMARD09_REG_X		0x0C
+#define DMARD09_REG_Y		0x0E
+#define DMARD09_REG_Z		0x10
 
 /* Used for dev_info() */
 struct dmard09_data {
@@ -38,6 +41,7 @@ static const struct iio_chan_spec dmard09_channels[] = {
 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
 		.modified = 1,
+		.address = DMARD09_REG_X,
 		.channel2 = IIO_MOD_X,
 	},
 	{
@@ -45,6 +49,7 @@ static const struct iio_chan_spec dmard09_channels[] = {
 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
 		.modified = 1,
+		.address = DMARD09_REG_Y,
 		.channel2 = IIO_MOD_Y,
 	},
 	{
@@ -52,6 +57,7 @@ static const struct iio_chan_spec dmard09_channels[] = {
 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
 		.modified = 1,
+		.address = DMARD09_REG_Z,
 		.channel2 = IIO_MOD_Z,
 	}
 };
@@ -80,6 +86,8 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 
 	#define DATA_LEN 8
 	#define DMARD09_AXIS_X 0
+	#define DMARD09_AXIS_Y 1
+	#define DMARD09_AXIS_Z 2
 	u8 buf[DATA_LEN] = {0};
 
 
@@ -88,16 +96,23 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 			dev_info(data->dev, "dmard09 reading info raw");
 
 			//ret = i2c_smbus_read_byte_data(data->client, 0x0A);
-			ret = i2c_smbus_read_block_data(data->client, 0x0A, buf);
+			ret = i2c_smbus_read_i2c_block_data(data->client, 0x0A, DATA_LEN, buf);
+			dev_info(data->dev, "dmard09 done reading block: %d ", ret);
 			if (ret == 0) {
 				dev_info(data->dev, "ENDVAL!");
 			}
 			else if (ret < 0) {
 				dev_info(data->dev, "error reading!");
 			} else {
-				*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << 8) | (buf[(DMARD09_AXIS_X+1)*2] ));
-				//*val = sign_extend32(ret, 7);
-
+				if (chan->address == DMARD09_REG_X) {
+					*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << 8) | (buf[(DMARD09_AXIS_X+1)*2] ));
+				}
+				if (chan->address == DMARD09_REG_Y) {
+					*val = (s16)((buf[(DMARD09_AXIS_Y+1)*2+1] << 8) | (buf[(DMARD09_AXIS_Y+1)*2] ));
+				}
+				if (chan->address == DMARD09_REG_Z) {
+					*val = (s16)((buf[(DMARD09_AXIS_Z+1)*2+1] << 8) | (buf[(DMARD09_AXIS_Z+1)*2] ));
+				}
 			}
 			return 1;
 	}
