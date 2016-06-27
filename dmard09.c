@@ -109,6 +109,7 @@ static int dmard09_probe(struct i2c_client *client,
 			const struct i2c_device_id *id)
 {
 	int ret;
+	u8 buf[3] = {0};
 	struct iio_dev *indio_dev;
 	struct dmard09_data *data;
 
@@ -136,7 +137,6 @@ static int dmard09_probe(struct i2c_client *client,
 			"unable to register iio device %d\n", ret);
 	}
 
-	u8 buf[3] = {0};
 	ret = i2c_smbus_read_i2c_block_data(data->client, DMARD09_REG_CHIPID, 1, buf);
 	if (ret < 0) {
 		/* Failed.. */
