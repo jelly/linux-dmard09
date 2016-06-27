@@ -35,6 +35,9 @@
 #define DMARD09_AXIS_Y 1
 #define DMARD09_AXIS_Z 2
 
+#define VALUE_INIT_READY        0x02    /*IC init ok*/
+#define VALUE_WHO_AM_I		0x95	/* D09 WMI */
+
 /* Used for dev_info() */
 struct dmard09_data {
 	struct i2c_client *client;
@@ -139,8 +142,6 @@ static int dmard09_probe(struct i2c_client *client,
 		/* Failed.. */
 	}
 
-	#define VALUE_INIT_READY        0x02    /*IC init ok*/
-	#define VALUE_WHO_AM_I			0x95	/* D09 WMI */
 	if (buf[0] == VALUE_WHO_AM_I)
 		dev_info(&client->dev, "dmard09 init ready");
 	else
