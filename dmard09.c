@@ -142,10 +142,8 @@ static int dmard09_probe(struct i2c_client *client,
 	indio_dev->info = &dmard09_info;
 
 	ret = iio_device_register(indio_dev);
-	if (ret < 0) {
-		dev_err(&client->dev,
-			"unable to register iio device %d\n", ret);
-	}
+	if (ret < 0)
+		return ret;
 
 	return 0;
 }
