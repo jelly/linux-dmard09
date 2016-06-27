@@ -137,7 +137,7 @@ static int dmard09_probe(struct i2c_client *client,
 	}
 
 	u8 buf[3] = {0};
-	ret = i2c_smbus_read_i2c_block_data(data->client, 0x18, 1, buf);
+	ret = i2c_smbus_read_i2c_block_data(data->client, DMARD09_REG_CHIPID, 1, buf);
 	if (ret < 0) {
 		/* Failed.. */
 	}
