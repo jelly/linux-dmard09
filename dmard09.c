@@ -123,6 +123,16 @@ static int dmard09_probe(struct i2c_client *client,
 	data->dev = &client->dev;
 	data->client = client;
 
+	ret = i2c_smbus_read_i2c_block_data(data->client, DMARD09_REG_CHIPID, 1, buf);
+	if (ret < 0) {
+		return ret;
+	}
+
+	if (buf[0] == VALUE_WHO_AM_I)
+		dev_info(&client->dev, "dmard09 init ready");
+	else
+		dev_info(&client->dev, "dmard09 init failed");
+
 	i2c_set_clientdata(client, indio_dev);
 	indio_dev->dev.parent = &client->dev;
 	indio_dev->name = DMARD09_DRV_NAME;
@@ -136,17 +146,6 @@ static int dmard09_probe(struct i2c_client *client,
 		dev_err(&client->dev,
 			"unable to register iio device %d\n", ret);
 	}
-
-	ret = i2c_smbus_read_i2c_block_data(data->client, DMARD09_REG_CHIPID, 1, buf);
-	if (ret < 0) {
-		/* Failed.. */
-	}
-
-	if (buf[0] == VALUE_WHO_AM_I)
-		dev_info(&client->dev, "dmard09 init ready");
-	else
-		dev_info(&client->dev, "dmard09 init failed");
-	
 
 	return 0;
 }
