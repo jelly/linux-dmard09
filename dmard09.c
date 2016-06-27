@@ -93,21 +93,18 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 	switch (mask) {
 		case IIO_CHAN_INFO_RAW:
 			ret = i2c_smbus_read_i2c_block_data(data->client, 0x0A, BUF_DATA_LEN, buf);
-			// FIXME: fix error messages.
+			/* FIXME: fix error messages. */
 			if (ret == 0) {
 				dev_info(data->dev, "Cannot read accelerometer data");
 			} else if (ret < 0) {
 				dev_info(data->dev, "Error reading!");
 			} else {
-				if (chan->address == DMARD09_REG_X) {
-					*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << 8) | (buf[(DMARD09_AXIS_X+1)*2] ));
-				}
-				if (chan->address == DMARD09_REG_Y) {
-					*val = (s16)((buf[(DMARD09_AXIS_Y+1)*2+1] << 8) | (buf[(DMARD09_AXIS_Y+1)*2] ));
-				}
-				if (chan->address == DMARD09_REG_Z) {
-					*val = (s16)((buf[(DMARD09_AXIS_Z+1)*2+1] << 8) | (buf[(DMARD09_AXIS_Z+1)*2] ));
-				}
+				if (chan->address == DMARD09_REG_X)
+					*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << 8) | (buf[(DMARD09_AXIS_X+1)*2]));
+				if (chan->address == DMARD09_REG_Y)
+					*val = (s16)((buf[(DMARD09_AXIS_Y+1)*2+1] << 8) | (buf[(DMARD09_AXIS_Y+1)*2]));
+				if (chan->address == DMARD09_REG_Z)
+					*val = (s16)((buf[(DMARD09_AXIS_Z+1)*2+1] << 8) | (buf[(DMARD09_AXIS_Z+1)*2]));
 			}
 			return 1;
 	}
@@ -132,7 +129,6 @@ static int dmard09_probe(struct i2c_client *client,
 		return -ENOMEM;
 	}
 
-	// No clue why or how this magic works.
 	data = iio_priv(indio_dev);
 	data->dev = &client->dev;
 	data->client = client;
@@ -155,16 +151,15 @@ static int dmard09_probe(struct i2c_client *client,
 	u8 buf[3] = {0};
 	ret = i2c_smbus_read_i2c_block_data(data->client, 0x18, 1, buf);
 	if (ret < 0) {
-		// Failed..
+		/* Failed.. */
 	}
 
 	#define VALUE_INIT_READY        0x02    /*IC init ok*/
 	#define VALUE_WHO_AM_I			0x95	/* D09 WMI */
-	if (buf[0] == VALUE_WHO_AM_I) {
+	if (buf[0] == VALUE_WHO_AM_I)
 		dev_info(&client->dev, "dmard09 init ready");
-	} else {
+	else
 		dev_info(&client->dev, "dmard09 init failed");
-	}
 	
 
 	return 0;
