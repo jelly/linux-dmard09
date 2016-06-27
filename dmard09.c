@@ -68,19 +68,6 @@ static const struct iio_chan_spec dmard09_channels[] = {
 	}
 };
 
-static bool dmard09_is_readable_reg(struct device *dev, unsigned int reg)
-{
-	switch(reg) {
-	case DMARD09_REG_CHIPID:
-	case DMARD09_REG_DATA:
-	case DMARD09_REG_CTRL:
-	case DMARD09_REG_CONTROL:
-		return true;
-	default:
-		return false;
-	}
-}
-
 static int dmard09_read_raw(struct iio_dev *indio_dev,
 			    struct iio_chan_spec const *chan,
 			    int *val, int *val2, long mask)
