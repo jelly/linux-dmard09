@@ -124,9 +124,8 @@ static int dmard09_probe(struct i2c_client *client,
 	data->client = client;
 
 	ret = i2c_smbus_read_i2c_block_data(data->client, DMARD09_REG_CHIPID, 1, buf);
-	if (ret < 0) {
+	if (ret < 0)
 		return ret;
-	}
 
 	if (buf[0] == VALUE_WHO_AM_I)
 		dev_info(&client->dev, "dmard09 init ready");
