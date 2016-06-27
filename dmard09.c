@@ -25,6 +25,7 @@
 #define DMARD09_REG_CHIPID      0x18
 #define DMARD09_REG_CTRL	0x00
 #define DMARD09_REG_DATA	0x01
+#define DMARD09_REG_STAT	0x0A
 #define DMARD09_REG_X		0x0C
 #define DMARD09_REG_Y		0x0E
 #define DMARD09_REG_Z		0x10
@@ -92,7 +93,7 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 
 	switch (mask) {
 		case IIO_CHAN_INFO_RAW:
-			ret = i2c_smbus_read_i2c_block_data(data->client, 0x0A, BUF_DATA_LEN, buf);
+			ret = i2c_smbus_read_i2c_block_data(data->client, DMARD09_REG_STAT, BUF_DATA_LEN, buf);
 			/* FIXME: fix error messages. */
 			if (ret == 0) {
 				dev_info(data->dev, "Cannot read accelerometer data");
