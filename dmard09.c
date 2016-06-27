@@ -130,7 +130,7 @@ static int dmard09_probe(struct i2c_client *client,
 	if (buf[0] == VALUE_WHO_AM_I)
 		dev_info(&client->dev, "dmard09 init ready");
 	else
-		dev_info(&client->dev, "dmard09 init failed");
+		return -ENODEV;
 
 	i2c_set_clientdata(client, indio_dev);
 	indio_dev->dev.parent = &client->dev;
