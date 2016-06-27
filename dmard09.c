@@ -178,5 +178,5 @@ static struct i2c_driver dmard09_driver = {
 module_i2c_driver(dmard09_driver);
 
 MODULE_AUTHOR("Jelle van der Waa <jelle@vdwaa.nl>");
-MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("DMARD09 3-axis accelerometer driver");
+MODULE_LICENSE("GPL");
