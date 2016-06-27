@@ -133,7 +133,6 @@ static int dmard09_probe(struct i2c_client *client,
 			"unable to register iio device %d\n", ret);
 	}
 
-	#define DMARD09_REG_CTRL	0x00
 	u8 buf[3] = {0};
 	ret = i2c_smbus_read_i2c_block_data(data->client, 0x18, 1, buf);
 	if (ret < 0) {
