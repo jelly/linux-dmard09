@@ -109,7 +109,6 @@ static int dmard09_probe(struct i2c_client *client,
 			const struct i2c_device_id *id)
 {
 	int ret;
-	u8 buf[3] = {0};
 	struct iio_dev *indio_dev;
 	struct dmard09_data *data;
 
@@ -123,11 +122,11 @@ static int dmard09_probe(struct i2c_client *client,
 	data->dev = &client->dev;
 	data->client = client;
 
-	ret = i2c_smbus_read_i2c_block_data(data->client, DMARD09_REG_CHIPID, 1, buf);
+	ret = i2c_smbus_read_byte_data(data->client, DMARD09_REG_CHIPID);
 	if (ret < 0)
 		return ret;
 
-	if (buf[0] == VALUE_WHO_AM_I)
+	if (ret == VALUE_WHO_AM_I)
 		dev_info(&client->dev, "dmard09 init ready");
 	else
 		return -ENODEV;
