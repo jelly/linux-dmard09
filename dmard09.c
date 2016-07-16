@@ -26,7 +26,7 @@
 #define DMARD09_REG_Z		0x10
 #define DMARD09_CHIPID		0x95
 
-#define BUF_DATA_LEN 8
+#define DMARD09_BUF_LEN 8
 #define DMARD09_AXES_NUM        3
 #define DMARD09_AXIS_X 0
 #define DMARD09_AXIS_Y 1
@@ -70,14 +70,14 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 			    int *val, int *val2, long mask)
 {
 	struct dmard09_data *data = iio_priv(indio_dev);
-	u8 buf[BUF_DATA_LEN] = {0};
+	u8 buf[DMARD09_BUF_LEN] = {0};
 	int ret;
 
 	switch (mask) {
 	case IIO_CHAN_INFO_RAW:
 		ret = i2c_smbus_read_i2c_block_data(data->client,
 						    DMARD09_REG_STAT,
-						    BUF_DATA_LEN, buf);
+						    DMARD09_BUF_LEN, buf);
 		if (ret < 0) {
 			dev_err(data->dev, "Error reading reg %lu\n",
 				chan->address);
@@ -85,7 +85,7 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 		}
 
 		if (chan->address == DMARD09_REG_X)
-			*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << 8)
+			*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << DMARD09_BUF_LEN)
 					| (buf[(DMARD09_AXIS_X+1)*2]));
 		if (chan->address == DMARD09_REG_Y)
 			*val = (s16)((buf[(DMARD09_AXIS_Y+1)*2+1] << 8)
