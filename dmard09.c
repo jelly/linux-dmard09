@@ -16,8 +16,6 @@
 #include <linux/module.h>
 #include <linux/i2c.h>
 #include <linux/iio/iio.h>
-#include <linux/gpio/consumer.h>
-#include <linux/iio/sysfs.h>
 
 #define DMARD09_DRV_NAME	"dmard09"
 #define DMARD09_REG_CONTROL	0x1d
