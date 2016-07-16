@@ -75,23 +75,22 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 	switch (mask) {
 		case IIO_CHAN_INFO_RAW:
 			ret = i2c_smbus_read_i2c_block_data(data->client, DMARD09_REG_STAT, BUF_DATA_LEN, buf);
-			/* FIXME: fix error messages. */
-			if (ret == 0) {
-				dev_err(data->dev, "Cannot read accelerometer data\n");
-			} else if (ret < 0) {
-				dev_err(data->dev, "Error reading\n");
-			} else {
-				if (chan->address == DMARD09_REG_X)
-					*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << 8) | (buf[(DMARD09_AXIS_X+1)*2]));
-				if (chan->address == DMARD09_REG_Y)
-					*val = (s16)((buf[(DMARD09_AXIS_Y+1)*2+1] << 8) | (buf[(DMARD09_AXIS_Y+1)*2]));
-				if (chan->address == DMARD09_REG_Z)
-					*val = (s16)((buf[(DMARD09_AXIS_Z+1)*2+1] << 8) | (buf[(DMARD09_AXIS_Z+1)*2]));
+			if (ret < 0) {
+				dev_err(data->dev, "Error reading reg %lu\n", chan->address);
+				return ret;
 			}
-			return 1;
-	}
 
-	return -EINVAL;
+			if (chan->address == DMARD09_REG_X)
+				*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << 8) | (buf[(DMARD09_AXIS_X+1)*2]));
+			if (chan->address == DMARD09_REG_Y)
+				*val = (s16)((buf[(DMARD09_AXIS_Y+1)*2+1] << 8) | (buf[(DMARD09_AXIS_Y+1)*2]));
+			if (chan->address == DMARD09_REG_Z)
+				*val = (s16)((buf[(DMARD09_AXIS_Z+1)*2+1] << 8) | (buf[(DMARD09_AXIS_Z+1)*2]));
+
+			return IIO_VAL_INT;
+		default:
+			return -EINVAL;
+	}
 }
 
 static const struct iio_info dmard09_info = {
