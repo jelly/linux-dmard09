@@ -68,9 +68,9 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 			    struct iio_chan_spec const *chan,
 			    int *val, int *val2, long mask)
 {
-	int ret;
-	u8 buf[BUF_DATA_LEN] = {0};
 	struct dmard09_data *data = iio_priv(indio_dev);
+	u8 buf[BUF_DATA_LEN] = {0};
+	int ret;
 
 	switch (mask) {
 		case IIO_CHAN_INFO_RAW:
