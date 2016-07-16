@@ -18,11 +18,8 @@
 #include <linux/iio/iio.h>
 
 #define DMARD09_DRV_NAME	"dmard09"
-#define DMARD09_REG_CONTROL	0x1d
 
 #define DMARD09_REG_CHIPID      0x18
-#define DMARD09_REG_CTRL	0x00
-#define DMARD09_REG_DATA	0x01
 #define DMARD09_REG_STAT	0x0A
 #define DMARD09_REG_X		0x0C
 #define DMARD09_REG_Y		0x0E
@@ -33,8 +30,7 @@
 #define DMARD09_AXIS_Y 1
 #define DMARD09_AXIS_Z 2
 
-#define VALUE_INIT_READY        0x02    /*IC init ok*/
-#define VALUE_WHO_AM_I		0x95	/* D09 WMI */
+#define DMARD09_CHIPID		0x95
 
 /* Used for dev_info() */
 struct dmard09_data {
@@ -124,7 +120,7 @@ static int dmard09_probe(struct i2c_client *client,
 	if (ret < 0)
 		return ret;
 
-	if (ret == VALUE_WHO_AM_I)
+	if (ret == DMARD09_CHIPID)
 		dev_info(&client->dev, "dmard09 init ready");
 	else
 		return -ENODEV;
