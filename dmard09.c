@@ -75,18 +75,24 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 
 	switch (mask) {
 	case IIO_CHAN_INFO_RAW:
-		ret = i2c_smbus_read_i2c_block_data(data->client, DMARD09_REG_STAT, BUF_DATA_LEN, buf);
+		ret = i2c_smbus_read_i2c_block_data(data->client,
+						    DMARD09_REG_STAT,
+						    BUF_DATA_LEN, buf);
 		if (ret < 0) {
-			dev_err(data->dev, "Error reading reg %lu\n", chan->address);
+			dev_err(data->dev, "Error reading reg %lu\n",
+				chan->address);
 			return ret;
 		}
 
 		if (chan->address == DMARD09_REG_X)
-			*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << 8) | (buf[(DMARD09_AXIS_X+1)*2]));
+			*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << 8)
+					| (buf[(DMARD09_AXIS_X+1)*2]));
 		if (chan->address == DMARD09_REG_Y)
-			*val = (s16)((buf[(DMARD09_AXIS_Y+1)*2+1] << 8) | (buf[(DMARD09_AXIS_Y+1)*2]));
+			*val = (s16)((buf[(DMARD09_AXIS_Y+1)*2+1] << 8)
+					| (buf[(DMARD09_AXIS_Y+1)*2]));
 		if (chan->address == DMARD09_REG_Z)
-			*val = (s16)((buf[(DMARD09_AXIS_Z+1)*2+1] << 8) | (buf[(DMARD09_AXIS_Z+1)*2]));
+			*val = (s16)((buf[(DMARD09_AXIS_Z+1)*2+1] << 8)
+					| (buf[(DMARD09_AXIS_Z+1)*2]));
 
 		return IIO_VAL_INT;
 	default:
@@ -96,7 +102,7 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 
 static const struct iio_info dmard09_info = {
 	.driver_module	= THIS_MODULE,
-	.read_raw 		= dmard09_read_raw,
+	.read_raw	= dmard09_read_raw,
 };
 
 static int dmard09_probe(struct i2c_client *client,
@@ -145,6 +151,7 @@ static int dmard09_probe(struct i2c_client *client,
 static int dmard09_remove(struct i2c_client *client)
 {
 	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+
 	iio_device_unregister(indio_dev);
 
 	return 0;
