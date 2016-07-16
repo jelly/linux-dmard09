@@ -27,6 +27,7 @@
 #define DMARD09_CHIPID		0x95
 
 #define BUF_DATA_LEN 8
+#define DMARD09_AXES_NUM        3
 #define DMARD09_AXIS_X 0
 #define DMARD09_AXIS_Y 1
 #define DMARD09_AXIS_Z 2
@@ -129,7 +130,7 @@ static int dmard09_probe(struct i2c_client *client,
 	indio_dev->name = DMARD09_DRV_NAME;
 	indio_dev->modes = INDIO_DIRECT_MODE; // ????
 	indio_dev->channels = dmard09_channels;
-	indio_dev->num_channels = 3; // FIXME
+	indio_dev->num_channels = DMARD09_AXES_NUM;
 	indio_dev->info = &dmard09_info;
 
 	ret = iio_device_register(indio_dev);
