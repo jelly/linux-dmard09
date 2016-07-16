@@ -24,13 +24,12 @@
 #define DMARD09_REG_X		0x0C
 #define DMARD09_REG_Y		0x0E
 #define DMARD09_REG_Z		0x10
+#define DMARD09_CHIPID		0x95
 
 #define BUF_DATA_LEN 8
 #define DMARD09_AXIS_X 0
 #define DMARD09_AXIS_Y 1
 #define DMARD09_AXIS_Z 2
-
-#define DMARD09_CHIPID		0x95
 
 /* Used for dev_info() */
 struct dmard09_data {
