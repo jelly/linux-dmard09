@@ -117,13 +117,15 @@ static int dmard09_probe(struct i2c_client *client,
 	data->client = client;
 
 	ret = i2c_smbus_read_byte_data(data->client, DMARD09_REG_CHIPID);
-	if (ret < 0)
+	if (ret < 0) {
+		dev_err(&client->dev, "Error reading chip id %d\n", ret);
 		return ret;
+	}
 
-	if (ret == DMARD09_CHIPID)
-		dev_info(&client->dev, "dmard09 init ready");
-	else
+	if (ret != DMARD09_CHIPID) {
+		dev_err(&client->dev, "Invalid chip id %d\n", ret);
 		return -ENODEV;
+	}
 
 	i2c_set_clientdata(client, indio_dev);
 	indio_dev->dev.parent = &client->dev;
