@@ -82,9 +82,9 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 			ret = i2c_smbus_read_i2c_block_data(data->client, DMARD09_REG_STAT, BUF_DATA_LEN, buf);
 			/* FIXME: fix error messages. */
 			if (ret == 0) {
-				dev_info(data->dev, "Cannot read accelerometer data");
+				dev_err(data->dev, "Cannot read accelerometer data\n");
 			} else if (ret < 0) {
-				dev_info(data->dev, "Error reading!");
+				dev_err(data->dev, "Error reading\n");
 			} else {
 				if (chan->address == DMARD09_REG_X)
 					*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << 8) | (buf[(DMARD09_AXIS_X+1)*2]));
@@ -112,7 +112,7 @@ static int dmard09_probe(struct i2c_client *client,
 
 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
 	if (!indio_dev) {
-		dev_err(&client->dev, "iio allocation failed!\n");
+		dev_err(&client->dev, "iio allocation failed\n");
 		return -ENOMEM;
 	}
 
