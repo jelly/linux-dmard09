@@ -85,7 +85,7 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 		}
 
 		if (chan->address == DMARD09_REG_X)
-			*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << DMARD09_BUF_LEN)
+			*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << 8)
 					| (buf[(DMARD09_AXIS_X+1)*2]));
 		if (chan->address == DMARD09_REG_Y)
 			*val = (s16)((buf[(DMARD09_AXIS_Y+1)*2+1] << 8)
