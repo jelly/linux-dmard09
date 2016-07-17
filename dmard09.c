@@ -31,10 +31,8 @@
 #define DMARD09_AXIS_Y 1
 #define DMARD09_AXIS_Z 2
 
-/* Used for dev_info() */
 struct dmard09_data {
 	struct i2c_client *client;
-	struct device *dev;
 };
 
 #define DMARD09_CHANNEL(_axis, reg) {				\
@@ -66,7 +64,7 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 						    DMARD09_REG_STAT,
 						    DMARD09_BUF_LEN, buf);
 		if (ret < 0) {
-			dev_err(data->dev, "Error reading reg %lu\n",
+			dev_err(&data->client->dev, "Error reading reg %lu\n",
 				chan->address);
 			return ret;
 		}
@@ -106,7 +104,6 @@ static int dmard09_probe(struct i2c_client *client,
 	}
 
 	data = iio_priv(indio_dev);
-	data->dev = &client->dev;
 	data->client = client;
 
 	ret = i2c_smbus_read_byte_data(data->client, DMARD09_REG_CHIPID);
