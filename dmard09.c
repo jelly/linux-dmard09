@@ -37,31 +37,19 @@ struct dmard09_data {
 	struct device *dev;
 };
 
+#define DMARD09_CHANNEL(_axis, reg) {				\
+	.type = IIO_ACCEL,					\
+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+	.modified = 1,						\
+	.address = reg,						\
+	.channel2 = IIO_MOD_##_axis,				\
+}
+
 static const struct iio_chan_spec dmard09_channels[] = {
-	{
-		.type = IIO_ACCEL,
-		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-		.modified = 1,
-		.address = DMARD09_REG_X,
-		.channel2 = IIO_MOD_X,
-	},
-	{
-		.type = IIO_ACCEL,
-		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-		.modified = 1,
-		.address = DMARD09_REG_Y,
-		.channel2 = IIO_MOD_Y,
-	},
-	{
-		.type = IIO_ACCEL,
-		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),
-		.modified = 1,
-		.address = DMARD09_REG_Z,
-		.channel2 = IIO_MOD_Z,
-	}
+	DMARD09_CHANNEL(X, DMARD09_REG_X),
+	DMARD09_CHANNEL(Y, DMARD09_REG_Y),
+	DMARD09_CHANNEL(Z, DMARD09_REG_Z),
 };
 
 static int dmard09_read_raw(struct iio_dev *indio_dev,
