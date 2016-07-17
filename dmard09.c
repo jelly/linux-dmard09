@@ -140,20 +140,7 @@ static int dmard09_probe(struct i2c_client *client,
 	indio_dev->num_channels = ARRAY_SIZE(dmard09_channels);
 	indio_dev->info = &dmard09_info;
 
-	ret = iio_device_register(indio_dev);
-	if (ret < 0)
-		return ret;
-
-	return 0;
-}
-
-static int dmard09_remove(struct i2c_client *client)
-{
-	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-
-	iio_device_unregister(indio_dev);
-
-	return 0;
+	return devm_iio_device_register(&client->dev, indio_dev);
 }
 
 static const struct i2c_device_id dmard09_id[] = {
@@ -168,7 +155,6 @@ static struct i2c_driver dmard09_driver = {
 		.name = DMARD09_DRV_NAME
 	},
 	.probe = dmard09_probe,
-	.remove = dmard09_remove,
 	.id_table = dmard09_id,
 };
 
