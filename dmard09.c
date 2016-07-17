@@ -70,7 +70,7 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 			    int *val, int *val2, long mask)
 {
 	struct dmard09_data *data = iio_priv(indio_dev);
-	u8 buf[DMARD09_BUF_LEN] = {0};
+	u8 buf[DMARD09_BUF_LEN];
 	int ret;
 
 	switch (mask) {
