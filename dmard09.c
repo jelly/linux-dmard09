@@ -1,5 +1,5 @@
 /*
- *  3-axis accelerometer driver for DMARD09 3-axis sensor.
+ * IIO driver for the 3-axis accelerometer Domintech DMARD09.
  *
  * Copyright (c) 2016, Jelle van der Waa <jelle@vdwaa.nl>
  *
