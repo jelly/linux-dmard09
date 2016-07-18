@@ -71,7 +71,7 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 						    DMARD09_REG_STAT,
 						    DMARD09_BUF_LEN, buf);
 		if (ret < 0) {
-			dev_err(&data->client->dev, "Error reading reg %lu\n",
+			dev_err(&data->client->dev, "Error reading reg %d\n",
 				DMARD09_REG_STAT);
 			return ret;
 		}

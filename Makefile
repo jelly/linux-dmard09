@@ -1,5 +1,5 @@
 CROSS_COMPILE=arm-none-eabi-
-KDIR=/mnt/msata/linux/
+KDIR=/mnt/msata/linux-hans
 
 obj-m += dmard09.o
 
