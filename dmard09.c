@@ -30,24 +30,27 @@
 #define DMARD09_AXIS_X 0
 #define DMARD09_AXIS_Y 1
 #define DMARD09_AXIS_Z 2
+#define DMARD09_AXIS_X_OFFSET (DMARD09_AXIS_X+1)*2
+#define DMARD09_AXIS_Y_OFFSET (DMARD09_AXIS_Y+1)*2
+#define DMARD09_AXIS_Z_OFFSET (DMARD09_AXIS_Z+1)*2
 
 struct dmard09_data {
 	struct i2c_client *client;
 };
 
-#define DMARD09_CHANNEL(_axis, reg) {				\
+#define DMARD09_CHANNEL(_axis, offset) {			\
 	.type = IIO_ACCEL,					\
 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
 	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
 	.modified = 1,						\
-	.address = reg,						\
+	.address = offset,					\
 	.channel2 = IIO_MOD_##_axis,				\
 }
 
 static const struct iio_chan_spec dmard09_channels[] = {
-	DMARD09_CHANNEL(X, DMARD09_REG_X),
-	DMARD09_CHANNEL(Y, DMARD09_REG_Y),
-	DMARD09_CHANNEL(Z, DMARD09_REG_Z),
+	DMARD09_CHANNEL(X, DMARD09_AXIS_X_OFFSET),
+	DMARD09_CHANNEL(Y, DMARD09_AXIS_Y_OFFSET),
+	DMARD09_CHANNEL(Z, DMARD09_AXIS_Z_OFFSET),
 };
 
 static int dmard09_read_raw(struct iio_dev *indio_dev,
@@ -73,15 +76,7 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 			return ret;
 		}
 
-		if (chan->address == DMARD09_REG_X)
-			*val = (s16)((buf[(DMARD09_AXIS_X+1)*2+1] << 8)
-					| (buf[(DMARD09_AXIS_X+1)*2]));
-		if (chan->address == DMARD09_REG_Y)
-			*val = (s16)((buf[(DMARD09_AXIS_Y+1)*2+1] << 8)
-					| (buf[(DMARD09_AXIS_Y+1)*2]));
-		if (chan->address == DMARD09_REG_Z)
-			*val = (s16)((buf[(DMARD09_AXIS_Z+1)*2+1] << 8)
-					| (buf[(DMARD09_AXIS_Z+1)*2]));
+		*val = (s16)((buf[chan->address + 1] << 8) | buf[chan->address]);
 
 		return IIO_VAL_INT;
 	default:
