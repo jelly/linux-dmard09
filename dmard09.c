@@ -30,9 +30,9 @@
 #define DMARD09_AXIS_X 0
 #define DMARD09_AXIS_Y 1
 #define DMARD09_AXIS_Z 2
-#define DMARD09_AXIS_X_OFFSET (DMARD09_AXIS_X+1)*2
-#define DMARD09_AXIS_Y_OFFSET (DMARD09_AXIS_Y+1)*2
-#define DMARD09_AXIS_Z_OFFSET (DMARD09_AXIS_Z+1)*2
+#define DMARD09_AXIS_X_OFFSET ((DMARD09_AXIS_X+1)*2)
+#define DMARD09_AXIS_Y_OFFSET ((DMARD09_AXIS_Y+1)*2)
+#define DMARD09_AXIS_Z_OFFSET ((DMARD09_AXIS_Z+1)*2)
 
 struct dmard09_data {
 	struct i2c_client *client;
@@ -76,7 +76,7 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 			return ret;
 		}
 
-		*val = (s16)((buf[chan->address + 1] << 8) | buf[chan->address]);
+		*val = (s16)((buf[chan->address+1] << 8) | buf[chan->address]);
 
 		return IIO_VAL_INT;
 	default:
