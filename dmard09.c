@@ -60,6 +60,10 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 
 	switch (mask) {
 	case IIO_CHAN_INFO_RAW:
+		/*
+		 * Read from the DMAR09_REG_STAT register, since the chip
+		 * caches reads from the individual X, Y, Z registers.
+		 */
 		ret = i2c_smbus_read_i2c_block_data(data->client,
 						    DMARD09_REG_STAT,
 						    DMARD09_BUF_LEN, buf);
