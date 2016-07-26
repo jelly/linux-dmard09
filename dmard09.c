@@ -13,6 +13,7 @@
  * more details.
  */
 
+#include <asm/unaligned.h>
 #include <linux/module.h>
 #include <linux/i2c.h>
 #include <linux/iio/iio.h>
@@ -30,9 +31,9 @@
 #define DMARD09_AXIS_X 0
 #define DMARD09_AXIS_Y 1
 #define DMARD09_AXIS_Z 2
-#define DMARD09_AXIS_X_OFFSET ((DMARD09_AXIS_X+1)*2)
-#define DMARD09_AXIS_Y_OFFSET ((DMARD09_AXIS_Y+1)*2)
-#define DMARD09_AXIS_Z_OFFSET ((DMARD09_AXIS_Z+1)*2)
+#define DMARD09_AXIS_X_OFFSET ((DMARD09_AXIS_X + 1) * 2)
+#define DMARD09_AXIS_Y_OFFSET ((DMARD09_AXIS_Y + 1 )* 2)
+#define DMARD09_AXIS_Z_OFFSET ((DMARD09_AXIS_Z + 1) * 2)
 
 struct dmard09_data {
 	struct i2c_client *client;
@@ -60,6 +61,7 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 	struct dmard09_data *data = iio_priv(indio_dev);
 	u8 buf[DMARD09_BUF_LEN];
 	int ret;
+	s16 accel;
 
 	switch (mask) {
 	case IIO_CHAN_INFO_RAW:
@@ -76,7 +78,13 @@ static int dmard09_read_raw(struct iio_dev *indio_dev,
 			return ret;
 		}
 
-		*val = (s16)((buf[chan->address+1] << 8) | buf[chan->address]);
+		accel = get_unaligned_le16(&buf[chan->address]);
+
+		/* Remove lower 3 bits and sign extend */
+		accel <<= 4;
+		accel >>= 7;
+
+		*val = accel;
 
 		return IIO_VAL_INT;
 	default:
